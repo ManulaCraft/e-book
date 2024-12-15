@@ -9,12 +9,13 @@ function scene:create(event)
     local paiPortador = false
     local maeSaudavel = false
     local maePortadora = false
-  
+    local paiSaudavelClicado = false
+    local maeSaudavelClicado = false
+
     local fundo = display.newImage(sceneGroup, "imagens/Pag6/Página 6.png")
     fundo.x = display.contentCenterX
     fundo.y = display.contentCenterY
 
-   
     local botaoproximo = display.newImage(sceneGroup, "imagens/Gerais/Próximo.png")
     botaoproximo.x = 650
     botaoproximo.y = 900
@@ -23,7 +24,6 @@ function scene:create(event)
     botaoanterior.x = 120
     botaoanterior.y = 900
 
-   
     local volumemaximo = display.newImage(sceneGroup, "imagens/Gerais/Volume maximo.png")
     volumemaximo.x = 650
     volumemaximo.y = 120
@@ -69,49 +69,7 @@ function scene:create(event)
     filha50saudavel.y = 700
     filha50saudavel.alpha = 0
 
-
-
-
-
-    local somInicio = audio.loadSound("Audios/Página 6.mp3")
-    local canalSom = 1 
-
-    local function tocarSom()
-        audio.play(somInicio, { channel = canalSom, loops = -1 })
-    end
-
-    local function pararSom()
-        audio.stop(canalSom)
-    end
-
-    local function alternarSom()
-        if audio.isChannelPlaying(canalSom) then
-            pararSom()
-            volumemenos.alpha = 1
-            volumemaximo.alpha = 0
-        else
-            tocarSom()
-            volumemenos.alpha = 0
-            volumemaximo.alpha = 1
-        end
-    end
-
-    function volumemaximo:tap(event)
-        alternarSom()
-    end
-
-    function volumemenos:tap(event)
-        alternarSom()
-    end
-
-    function botaoproximo:tap(event)
-        composer.gotoScene("Referencia", { effect = "fromRight", time = 1000 })
-    end
-
-    function botaoanterior:tap(event)
-        composer.gotoScene("Pag5", { effect = "fromLeft", time = 1000 })
-    end
-
+    -- Função de atualizar alpha das imagens
     local function atualizarAlphaFilhas()
         if paiSaudavel and maeSaudavel then
             filhasaudavel.alpha = 1
@@ -143,16 +101,11 @@ function scene:create(event)
         elseif event.phase == "ended" then
             paiSaudavel = false
         end
-        atualizarAlphaFilhas()
-        return true
-    end
-
-    -- Função de toque para o pai portador
-    local function toquePaiPortador(event)
-        if event.phase == "began" then
-            paiPortador = true
-        elseif event.phase == "ended" then
-            paiPortador = false
+        if paiSaudavel and maeSaudavel then
+            filhasaudavel.alpha = 1
+            filhaportadora.alpha = 0
+            filha50portadora.alpha = 0
+            filha50saudavel.alpha = 0
         end
         atualizarAlphaFilhas()
         return true
@@ -165,26 +118,57 @@ function scene:create(event)
         elseif event.phase == "ended" then
             maeSaudavel = false
         end
-        atualizarAlphaFilhas()
-        return true
-    end
-
-    -- Função de toque para a mãe portadora
-    local function toqueMaePortadora(event)
-        if event.phase == "began" then
-            maePortadora = true
-        elseif event.phase == "ended" then
-            maePortadora = false
+        if maeSaudavel and paiSaudavel then
+            filhasaudavel.alpha = 1
+            filhaportadora.alpha = 0
+            filha50portadora.alpha = 0
+            filha50saudavel.alpha = 0
         end
         atualizarAlphaFilhas()
         return true
     end
 
+    function botaoproximo:tap(event)
+        composer.gotoScene("Referencia", { effect = "fromRight", time = 1000 })
+    end
+
+    function botaoanterior:tap(event)
+        composer.gotoScene("Pag5", { effect = "fromLeft", time = 1000 })
+    end
+
     paisaudavel:addEventListener("touch", toquePaiSaudavel)
-    paiportador:addEventListener("touch", toquePaiPortador)
     maesaudavel:addEventListener("touch", toqueMaeSaudavel)
-    maeportador:addEventListener("touch", toqueMaePortadora)
-    
+    local somInicio = audio.loadSound("Audios/Página 6.mp3")
+    local canalSom = 1 
+
+    local function tocarSom()
+        audio.play(somInicio, { channel = canalSom, loops = -1 })
+    end
+
+    local function pararSom()
+        audio.stop(canalSom)
+    end
+
+    local function alternarSom()
+        if audio.isChannelPlaying(canalSom) then
+            pararSom()
+            volumemenos.alpha = 1
+            volumemaximo.alpha = 0
+        else
+            tocarSom()
+            volumemenos.alpha = 0
+            volumemaximo.alpha = 1
+        end
+    end
+
+    function volumemaximo:tap(event)
+        alternarSom()
+    end
+
+    function volumemenos:tap(event)
+        alternarSom()
+    end
+   
     botaoproximo:addEventListener("tap", botaoproximo)
     botaoanterior:addEventListener("tap", botaoanterior)
     volumemaximo:addEventListener("tap", volumemaximo)

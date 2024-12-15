@@ -33,11 +33,11 @@ function scene:create(event)
     -- Imagens
     local imagem1 = display.newImage(sceneGroup, "imagens/Pag2/imagem1.png")
     imagem1.x = display.contentCenterX
-    imagem1.y = 600
+    imagem1.y = 635
 
     local imagem2 = display.newImage(sceneGroup, "imagens/Pag2/imagem2.png")
     imagem2.x = display.contentCenterX + 5
-    imagem2.y = 700
+    imagem2.y = 640
     imagem2.alpha = 0
 
     -- Som
@@ -84,7 +84,8 @@ function scene:create(event)
     -- Acelerômetro
     local function Shake(event)
         if event.isShake then
-            imagem2.alpha = 1
+            transition.to(imagem1, { alpha = 0, time = 500 })
+            transition.to(imagem2, { alpha = 1, time = 500 })
         end
     end
 

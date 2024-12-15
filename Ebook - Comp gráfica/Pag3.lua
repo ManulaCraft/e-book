@@ -38,15 +38,15 @@ function scene:create(event)
     pessoa2.x = display.contentCenterX + 5
     pessoa2.y = 820
 
-    local texto1 = display.newImage(sceneGroup, "imagens/Pag3/texto1.png")
-    texto1.x = 550
-    texto1.y = 750
-    texto1.alpha = 0
+    local opcao2 = display.newImage(sceneGroup, "imagens/Pag3/opcao2.png")
+    opcao2.x = 550
+    opcao2.y = 750
+    opcao2.alpha = 0
 
-    local texto2 = display.newImage(sceneGroup, "imagens/Pag3/texto2.png")
-    texto2.x = 220
-    texto2.y = 750
-    texto2.alpha = 0
+    local opcao1 = display.newImage(sceneGroup, "imagens/Pag3/opcao1.png")
+    opcao1.x = 220
+    opcao1.y = 750
+    opcao1.alpha = 0
 
     local lupa = display.newImage(sceneGroup, "imagens/Pag3/lupa.png")
     lupa.x = 220
@@ -98,26 +98,41 @@ function scene:create(event)
 
     local function moverLupa(event)
         if event.phase == "moved" then
-
+            -- Atualiza a posição da lupa
             lupa.x = event.x
             lupa.y = event.y
-
- 
+    
+            -- Verifica interação com pessoa1
             if math.abs(lupa.x - pessoa1.x) < pessoa1.width / 2 and math.abs(lupa.y - pessoa1.y) < pessoa1.height / 2 then
-                texto1.alpha = 1
+                if opcao2.alpha == 0 then
+                    opcao2.alpha = 1
+                    transition.to(opcao2, { time = 200, xScale = 1.1, yScale = 1.1, onComplete = function()
+                        transition.to(opcao2, { time = 200, xScale = 1, yScale = 1 })
+                    end })
+                end
             else
-                texto1.alpha = 0
+                if opcao2.alpha == 1 then
+                    transition.to(opcao2, { time = 200, alpha = 0 })
+                end
             end
-
-
+    
+            -- Verifica interação com pessoa2
             if math.abs(lupa.x - pessoa2.x) < pessoa2.width / 2 and math.abs(lupa.y - pessoa2.y) < pessoa2.height / 2 then
-                texto2.alpha = 1
+                if opcao1.alpha == 0 then
+                    opcao1.alpha = 1
+                    transition.to(opcao1, { time = 200, xScale = 1.1, yScale = 1.1, onComplete = function()
+                        transition.to(opcao1, { time = 200, xScale = 1, yScale = 1 })
+                    end })
+                end
             else
-                texto2.alpha = 0
+                if opcao1.alpha == 1 then
+                    transition.to(opcao1, { time = 200, alpha = 0 })
+                end
             end
         end
         return true
     end
+    
 
     lupa:addEventListener("touch", moverLupa)
 

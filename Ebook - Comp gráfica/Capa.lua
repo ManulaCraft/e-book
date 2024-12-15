@@ -11,6 +11,8 @@ function scene:create(event)
     fundo.x = display.contentCenterX
     fundo.y = display.contentCenterY
 
+
+
    
     local botaoproximo = display.newImage(sceneGroup, "imagens/Gerais/Próximo.png")
     botaoproximo.x = 650
